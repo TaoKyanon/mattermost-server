@@ -703,6 +703,7 @@ func (s *SqlPostStore) Delete(postID string, time int64, deleteByID string) erro
 			WHERE Id = $4 OR RootId = $4`, time, jsonKeyPath(model.PostPropsDeleteBy), jsonStringVal(deleteByID), postID)
 	} else {
 		_, err = transaction.Exec(`UPDATE Posts
+			FORCE INDEX (primary)
 			SET DeleteAt = ?,
 			UpdateAt = ?,
 			Props = JSON_SET(Props, ?, ?)
